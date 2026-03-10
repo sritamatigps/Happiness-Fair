@@ -346,7 +346,7 @@
   /* ══════════════════
      PAGE 5 — SHARE
   ══════════════════ */
-  #screen-5 { padding:0 24px 60px;align-items:center;text-align:center;background:transparent; }
+  #screen-5 { padding:0 24px 30px;align-items:center;text-align:center;background:transparent; }
 
   .confetti-wrapper {
     position:absolute;top:0;left:0;right:0;height:200px;
@@ -365,7 +365,7 @@
     width:120px;height:120px;border-radius:50%;
     background:linear-gradient(135deg,var(--y),var(--o),var(--r),var(--pink));
     display:flex;align-items:center;justify-content:center;font-size:52px;
-    margin:60px auto 20px;
+    margin:36px auto 16px;
     box-shadow:0 0 0 8px rgba(255,209,102,.2),0 0 0 16px rgba(255,209,102,.08);
     animation:badgePop .5s cubic-bezier(.34,1.56,.64,1) both .2s;
     position:relative;z-index:2;
@@ -379,7 +379,7 @@
     margin-bottom:10px;line-height:1.2;max-width:300px;
     position:relative;z-index:2;
   }
-  .s5-msg{font-size:15px;color:var(--text-light);line-height:1.6;max-width:300px;margin-bottom:28px;font-weight:600;position:relative;z-index:2;}
+  .s5-msg{font-size:15px;color:var(--text-light);line-height:1.6;max-width:300px;margin-bottom:20px;font-weight:600;position:relative;z-index:2;}
 
   .share-grid {
     display:grid;grid-template-columns:1fr 1fr;gap:12px;
@@ -407,21 +407,7 @@
     border:1.5px solid rgba(123,94,167,.15);
   }
 
-  .nominate-card {
-    background:rgba(255,255,255,.8);
-    border:1.5px solid rgba(123,94,167,.15);
-    border-radius:20px;padding:18px 20px;
-    max-width:360px;width:100%;margin-top:20px;text-align:center;
-    box-shadow:0 4px 20px rgba(123,94,167,.1);
-    backdrop-filter:blur(8px);position:relative;z-index:2;
-    overflow:hidden;
-  }
-  .nominate-card::before {
-    content:'';position:absolute;top:0;left:0;right:0;height:3px;
-    background:linear-gradient(90deg,var(--r),var(--o),var(--y),var(--g),var(--b),var(--v),var(--pink));
-  }
-  .nominate-card h3{font-family:'Syne',sans-serif;font-size:16px;color:var(--o);margin-bottom:6px;}
-  .nominate-card p{font-size:13px;color:var(--text-light);font-weight:600;}
+
 
   /* ── PROGRESS DOTS ── */
   #progress-dots {
@@ -539,14 +525,11 @@
     <button class="share-btn btn-download" onclick="downloadImage()">⬇️ &nbsp;Download Image</button>
   </div>
   <div class="hashtags">
-    <span class="hashtag">#SafeInternetAmbassador</span>
-    <span class="hashtag">#KindInternet</span>
-    <span class="hashtag">#HappinessFair2026</span>
-    <span class="hashtag">@monoshij</span>
-  </div>
-  <div class="nominate-card">
-    <h3>📣 Nominate 2 Friends!</h3>
-    <p>Tag two friends who should also take the Safe Internet Pledge and spread kindness online.</p>
+    <span class="hashtag">#happinessfair2026</span>
+    <span class="hashtag">#astitva</span>
+    <span class="hashtag">#digitalinclusivity</span>
+    <span class="hashtag">#monoshij</span>
+    <span class="hashtag">Tag @monoshij</span>
   </div>
 </div>
 
@@ -779,22 +762,21 @@ function generateCard(photoDataUrl) {
   }
 
   // TOP BANNER
-  const topH = 300;
+  const topH = 240;
   const topG = ctx.createLinearGradient(0, 0, W, topH);
   topG.addColorStop(0,'#FF4E6A'); topG.addColorStop(.25,'#FF8C42');
   topG.addColorStop(.5,'#FFD166'); topG.addColorStop(.75,'#06D6A0');
   topG.addColorStop(1,'#118AB2');
   ctx.fillStyle = topG;
-  roundRect(ctx, 30, 30, W-60, topH, 40); ctx.fill();
+  roundRect(ctx, 0, 0, W, topH, [0,0,40,40]); ctx.fill();
 
   ctx.textAlign = 'center'; ctx.fillStyle = '#fff';
-  ctx.font = 'bold 78px sans-serif'; ctx.fillText('I TOOK THE', W/2, 118);
-  ctx.font = 'bold 62px sans-serif'; ctx.fillText('SAFE INTERNET PLEDGE 🌈', W/2, 198);
-  ctx.font = '42px sans-serif'; ctx.fillStyle='rgba(255,255,255,.8)';
-  ctx.fillText('Happiness Fair 2026', W/2, 262);
+  ctx.font = 'bold 72px sans-serif'; ctx.fillText('I TOOK THE SAFE INTERNET PLEDGE 🌈', W/2, 110);
+  ctx.font = '40px sans-serif'; ctx.fillStyle='rgba(255,255,255,.85)';
+  ctx.fillText('Happiness Fair 2026', W/2, 178);
 
-  // SELFIE AREA
-  const photoY = topH + 80, photoH = 760, photoX = 60, photoW = W-120;
+  // SELFIE AREA — maximised
+  const photoY = topH + 30, photoH = 1100, photoX = 30, photoW = W-60;
   if (photoDataUrl) {
     const img = new Image();
     img.onload = () => {
@@ -828,31 +810,27 @@ function generateCard(photoDataUrl) {
   }
 
   function finishCard(ctx,W,H,photoY,photoH) {
-    const botY = photoY+photoH+50, botH = H-botY-30;
+    const botY = photoY+photoH+20, botH = H-botY;
     const botG = ctx.createLinearGradient(0,botY,W,H);
     botG.addColorStop(0,'#7B5EA7'); botG.addColorStop(.5,'#FF6B9D'); botG.addColorStop(1,'#FF4E6A');
     ctx.fillStyle=botG;
-    roundRect(ctx,30,botY,W-60,botH,40); ctx.fill();
+    roundRect(ctx,0,botY,W,botH,[40,40,0,0]); ctx.fill();
 
     ctx.textAlign='center'; ctx.fillStyle='#fff';
-    ctx.font='bold 58px sans-serif'; ctx.fillText('SAFE INTERNET AMBASSADOR',W/2,botY+80);
-    ctx.font='38px sans-serif'; ctx.fillStyle='rgba(255,255,255,.85)';
-    ctx.fillText('Happiness Fair 2026',W/2,botY+140);
-    ctx.strokeStyle='rgba(255,255,255,.3)'; ctx.lineWidth=1.5;
-    ctx.beginPath(); ctx.moveTo(120,botY+168); ctx.lineTo(W-120,botY+168); ctx.stroke();
-    ctx.fillStyle='rgba(255,255,255,.75)'; ctx.font='34px sans-serif';
-    ctx.fillText('Tag @monoshij',W/2,botY+216);
-    ctx.font='30px sans-serif';
-    ctx.fillText('#SafeInternetAmbassador  #KindInternet',W/2,botY+260);
-    ctx.fillText('#HappinessFair2026',W/2,botY+302);
+    ctx.font='bold 52px sans-serif'; ctx.fillText('SAFE INTERNET AMBASSADOR',W/2,botY+72);
+    ctx.font='36px sans-serif'; ctx.fillStyle='rgba(255,255,255,.85)';
+    ctx.fillText('Tag @monoshij', W/2, botY+128);
+    ctx.font='30px sans-serif'; ctx.fillStyle='rgba(255,255,255,.72)';
+    ctx.fillText('#happinessfair2026  #astitva', W/2, botY+176);
+    ctx.fillText('#digitalinclusivity  #monoshij', W/2, botY+218);
 
     // Rainbow bottom strip
-    const rbG = ctx.createLinearGradient(0,H-16,W,H);
+    const rbG = ctx.createLinearGradient(0,H-14,W,H);
     rbG.addColorStop(0,'#FF4E6A'); rbG.addColorStop(.17,'#FF8C42');
     rbG.addColorStop(.34,'#FFD166'); rbG.addColorStop(.5,'#06D6A0');
     rbG.addColorStop(.67,'#118AB2'); rbG.addColorStop(.83,'#7B5EA7');
     rbG.addColorStop(1,'#FF6B9D');
-    ctx.fillStyle=rbG; ctx.fillRect(0,H-16,W,16);
+    ctx.fillStyle=rbG; ctx.fillRect(0,H-14,W,14);
 
     pledgeImageDataUrl = canvas.toDataURL('image/jpeg',0.92);
   }
@@ -887,7 +865,7 @@ async function nativeShare() {
       const file = new File([blob],'safe-internet-pledge.jpg',{type:'image/jpeg'});
       await navigator.share({
         title:'I took the Safe Internet Pledge 🌈',
-        text:'Join me in creating a kinder internet. #SafeInternetAmbassador #KindInternet #HappinessFair2026',
+        text:'Join me in creating a kinder internet. #happinessfair2026 #astitva #digitalinclusivity @monoshij',
         files:[file]
       });
     } catch(e) { downloadImage(); }
@@ -897,12 +875,12 @@ function shareInsta() { nativeShare(); }
 function shareWhatsApp() {
   if (navigator.share) { nativeShare(); }
   else {
-    const text = encodeURIComponent('I just took the Safe Internet Pledge 🌈 #SafeInternetAmbassador #KindInternet #HappinessFair2026');
+    const text = encodeURIComponent('I just took the Safe Internet Pledge 🌈 #happinessfair2026 #astitva #digitalinclusivity @monoshij');
     window.open('https://wa.me/?text='+text,'_blank');
   }
 }
 function shareTwitter() {
-  const text = encodeURIComponent('I just took the Safe Internet Pledge 🌈\n#SafeInternetAmbassador #KindInternet #HappinessFair2026 @monoshij');
+  const text = encodeURIComponent('I just took the Safe Internet Pledge 🌈\n#happinessfair2026 #astitva #digitalinclusivity #monoshij @monoshij');
   window.open('https://twitter.com/intent/tweet?text='+text,'_blank');
 }
 function downloadImage() {
