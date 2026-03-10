@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Safe Internet Pledge — Happiness Fair 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --r: #FF4E6A;
+    --o: #FF8C42;
+    --y: #FFD166;
+    --g: #06D6A0;
+    --b: #118AB2;
+    --v: #7B5EA7;
+    --pink: #FF6B9D;
+    --white: #ffffff;
+    --dark: #1A1033;
+    --text: #2a1f4e;
+    --text-light: #6b5b9e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    height: 100%;
+    font-family: 'Nunito', sans-serif;
+    background: #fff;
+    overflow: hidden;
+  }
+
+  /* ── STAR CANVAS (fixed background layer) ── */
+  #star-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── SCREENS ── */
+  .screen {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .45s ease, transform .45s cubic-bezier(.22,1,.36,1);
+    transform: translateY(28px);
+    z-index: 2;
+  }
+  .screen.active {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateY(0);
+  }
+  .screen.exit {
+    opacity: 0;
+    transform: translateY(-28px);
+    pointer-events: none;
+  }
+
+  /* ── COUNTER BADGE ── */
+  #counter-badge {
+    position: fixed;
+    top: 14px; right: 16px;
+    background: rgba(255,255,255,.85);
+    backdrop-filter: blur(12px);
+    border: 1.5px solid rgba(123,94,167,.25);
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--text);
+    z-index: 100;
+    letter-spacing: .02em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 12px rgba(123,94,167,.15);
+  }
+  #counter-badge .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--g);
+    animation: pulse 1.8s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.3)} }
+
+  /* ══════════════════
+     RAINBOW BAR
+  ══════════════════ */
+  .rainbow-bar {
+    width: 100%;
+    height: 7px;
+    background: linear-gradient(90deg, var(--r),var(--o),var(--y),var(--g),var(--b),var(--v),var(--pink));
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ══════════════════
+     PAGE 1 — LANDING
+  ══════════════════ */
+  #screen-1 { padding-bottom: 60px; background: transparent; }
+
+  .s1-inner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 36px 28px 0;
+    text-align: center;
+    width: 100%;
+  }
+
+  .rainbow-emoji {
+    font-size: 58px;
+    margin-bottom: 12px;
+    animation: float 3s ease-in-out infinite;
+    filter: drop-shadow(0 4px 12px rgba(255,107,157,.35));
+  }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+
+  .s1-headline {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(28px,8vw,40px);
+    font-weight: 800;
+    line-height: 1.1;
+    background: linear-gradient(135deg, var(--r) 0%, var(--o) 30%, var(--v) 70%, var(--b) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 14px;
+  }
+
+  .s1-sub {
+    font-size: 15.5px;
+    font-weight: 600;
+    color: var(--text-light);
+    line-height: 1.6;
+    max-width: 320px;
+    margin-bottom: 28px;
+  }
+
+  .s1-card {
+    background: rgba(255,255,255,.75);
+    border: 1.5px solid rgba(123,94,167,.15);
+    border-radius: 24px;
+    padding: 22px;
+    max-width: 360px;
+    width: 100%;
+    margin-bottom: 30px;
+    text-align: left;
+    box-shadow: 0 4px 24px rgba(123,94,167,.1);
+    backdrop-filter: blur(8px);
+    position: relative;
+    overflow: hidden;
+  }
+  .s1-card::before {
+    content:'';
+    position:absolute;
+    top:0;left:0;right:0;height:3px;
+    background: linear-gradient(90deg, var(--r),var(--o),var(--y),var(--g),var(--b),var(--v),var(--pink));
+  }
+  .s1-card p {
+    color: var(--text-light);
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 18px;
+  }
+  .s1-card ul { list-style: none; display: flex; flex-direction: column; gap: 11px; }
+  .s1-card ul li {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 14px; font-weight: 800; color: var(--text);
+  }
+  .pill {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; flex-shrink: 0;
+  }
+
+  /* ── BUTTONS ── */
+  .btn-rainbow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: calc(100% - 56px);
+    max-width: 340px;
+    padding: 18px 24px;
+    border-radius: 999px;
+    border: none;
+    background: linear-gradient(135deg, var(--r),var(--o),var(--y),var(--g),var(--b),var(--v));
+    background-size: 200% 200%;
+    animation: gradMove 4s ease infinite;
+    color: #fff;
+    font-family: 'Syne', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    cursor: pointer;
+    box-shadow: 0 8px 28px rgba(255,78,106,.3);
+    position: relative;
+    overflow: hidden;
+    transition: transform .15s, box-shadow .15s;
+  }
+  .btn-rainbow:active { transform: scale(.96); box-shadow: 0 4px 14px rgba(255,78,106,.25); }
+  @keyframes gradMove {
+    0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%}
+  }
+  .btn-rainbow::after {
+    content:'';
+    position:absolute;inset:0;
+    background: linear-gradient(180deg,rgba(255,255,255,.2) 0%,transparent 100%);
+    border-radius: inherit; pointer-events: none;
+  }
+
+  /* ══════════════════
+     PAGE 2 — PLEDGE
+  ══════════════════ */
+  #screen-2 { padding-bottom: 60px; background: transparent; }
+
+  .s2-inner {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 36px 28px 0; text-align: center; width: 100%;
+    position: relative; z-index: 2;
+  }
+  .s2-title {
+    font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800;
+    background: linear-gradient(135deg, var(--r), var(--v));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-bottom: 4px;
+  }
+  .s2-subtitle {
+    font-size: 12px; color: var(--text-light); margin-bottom: 26px;
+    letter-spacing: .07em; text-transform: uppercase; font-weight: 700;
+  }
+
+  .pledge-card {
+    background: rgba(255,255,255,.8);
+    border: 1.5px solid rgba(123,94,167,.15);
+    border-radius: 28px;
+    padding: 28px 22px;
+    max-width: 380px; width: 100%; margin-bottom: 28px;
+    position: relative; overflow: hidden;
+    box-shadow: 0 6px 32px rgba(123,94,167,.12);
+    backdrop-filter: blur(8px);
+  }
+  .pledge-card::before {
+    content:''; position:absolute; top:0;left:0;right:0; height:4px;
+    background: linear-gradient(90deg, var(--r),var(--o),var(--y),var(--g),var(--b),var(--v),var(--pink));
+  }
+  .pledge-intro {
+    font-size: 14px; color: var(--text-light); margin-bottom: 20px;
+    font-style: italic; font-weight: 600;
+  }
+  .pledge-items { display: flex; flex-direction: column; gap: 14px; text-align: left; }
+  .pledge-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    animation: slideIn .4s both;
+  }
+  @keyframes slideIn {
+    from{opacity:0;transform:translateX(-14px)} to{opacity:1;transform:translateX(0)}
+  }
+  .pledge-item:nth-child(1){animation-delay:.1s}
+  .pledge-item:nth-child(2){animation-delay:.18s}
+  .pledge-item:nth-child(3){animation-delay:.26s}
+  .pledge-item:nth-child(4){animation-delay:.34s}
+  .pledge-item:nth-child(5){animation-delay:.42s}
+  .pledge-item:nth-child(6){animation-delay:.50s}
+  .check-icon {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--g), var(--b));
+    display:flex;align-items:center;justify-content:center;
+    font-size:13px;color:#fff;font-weight:800;flex-shrink:0;margin-top:1px;
+  }
+  .pledge-text { font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.4; }
+
+  /* ══════════════════
+     PAGE 3 — SELFIE
+  ══════════════════ */
+  #screen-3 { justify-content: center; align-items: center; text-align: center; padding: 40px 28px; background: transparent; }
+
+  .camera-ring {
+    width: 170px; height: 170px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--r),var(--o),var(--y),var(--g),var(--b),var(--v));
+    padding: 4px; margin: 0 auto 28px;
+    animation: spin 8s linear infinite;
+    box-shadow: 0 8px 32px rgba(255,78,106,.25);
+  }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  .camera-inner {
+    width:100%;height:100%;border-radius:50%;background:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:70px;
+  }
+  .s3-title {
+    font-family:'Syne',sans-serif;font-size:26px;font-weight:800;
+    background: linear-gradient(135deg, var(--r), var(--v));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    margin-bottom:10px;
+  }
+  .s3-sub { font-size:15px;color:var(--text-light);margin-bottom:32px;line-height:1.6; }
+  #file-input { display:none; }
+  .btn-camera {
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    padding:18px 36px;border-radius:999px;border:none;
+    background: linear-gradient(135deg, var(--pink), var(--r));
+    color:#fff;font-family:'Syne',sans-serif;font-size:17px;font-weight:700;
+    cursor:pointer;box-shadow:0 8px 28px rgba(255,107,157,.35);
+    transition:transform .15s;width:100%;max-width:300px;
+  }
+  .btn-camera:active{transform:scale(.96);}
+  .skip-link {
+    margin-top:18px;color:var(--text-light);font-size:13px;cursor:pointer;
+    text-decoration:underline;text-underline-offset:3px;font-weight:600;
+  }
+
+  /* ══════════════════
+     PAGE 4 — PREVIEW
+  ══════════════════ */
+  #screen-4 { padding:20px 20px 60px;align-items:center;text-align:center;background:transparent; }
+  .s4-title {
+    font-family:'Syne',sans-serif;font-size:22px;font-weight:800;
+    background:linear-gradient(135deg,var(--r),var(--v));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    margin-bottom:4px;margin-top:16px;position:relative;z-index:2;
+  }
+  .s4-sub{font-size:13px;color:var(--text-light);margin-bottom:16px;position:relative;z-index:2;font-weight:600;}
+  #canvas-container {
+    width:100%;max-width:340px;border-radius:22px;overflow:hidden;
+    box-shadow:0 16px 56px rgba(123,94,167,.25);margin-bottom:20px;
+    position:relative;z-index:2;border:2px solid rgba(123,94,167,.1);
+  }
+  #pledge-canvas{width:100%;display:block;}
+
+  /* ══════════════════
+     PAGE 5 — SHARE
+  ══════════════════ */
+  #screen-5 { padding:0 24px 60px;align-items:center;text-align:center;background:transparent; }
+
+  .confetti-wrapper {
+    position:absolute;top:0;left:0;right:0;height:200px;
+    pointer-events:none;overflow:hidden;z-index:3;
+  }
+  .confetti-piece {
+    position:absolute;width:8px;height:8px;border-radius:2px;
+    animation:confettiFall 2.5s both;
+  }
+  @keyframes confettiFall {
+    from{transform:translateY(-20px) rotate(0deg);opacity:1}
+    to{transform:translateY(220px) rotate(540deg);opacity:0}
+  }
+
+  .ambassador-badge {
+    width:120px;height:120px;border-radius:50%;
+    background:linear-gradient(135deg,var(--y),var(--o),var(--r),var(--pink));
+    display:flex;align-items:center;justify-content:center;font-size:52px;
+    margin:60px auto 20px;
+    box-shadow:0 0 0 8px rgba(255,209,102,.2),0 0 0 16px rgba(255,209,102,.08);
+    animation:badgePop .5s cubic-bezier(.34,1.56,.64,1) both .2s;
+    position:relative;z-index:2;
+  }
+  @keyframes badgePop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+
+  .s5-title {
+    font-family:'Syne',sans-serif;font-size:26px;font-weight:800;
+    background:linear-gradient(135deg,var(--r),var(--v));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    margin-bottom:10px;line-height:1.2;max-width:300px;
+    position:relative;z-index:2;
+  }
+  .s5-msg{font-size:15px;color:var(--text-light);line-height:1.6;max-width:300px;margin-bottom:28px;font-weight:600;position:relative;z-index:2;}
+
+  .share-grid {
+    display:grid;grid-template-columns:1fr 1fr;gap:12px;
+    max-width:360px;width:100%;margin-bottom:14px;position:relative;z-index:2;
+  }
+  .share-btn {
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    padding:14px 12px;border-radius:16px;border:none;
+    font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;
+    color:#fff;cursor:pointer;transition:transform .15s,opacity .15s;
+  }
+  .share-btn:active{transform:scale(.95);opacity:.85;}
+  .btn-insta{background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);}
+  .btn-whatsapp{background:#25D366;}
+  .btn-twitter{background:#000;}
+  .btn-download{background:linear-gradient(135deg,var(--b),var(--v));grid-column:span 2;}
+
+  .hashtags {
+    display:flex;flex-wrap:wrap;gap:8px;justify-content:center;
+    max-width:340px;margin-top:8px;position:relative;z-index:2;
+  }
+  .hashtag {
+    padding:5px 12px;border-radius:999px;font-size:11px;font-weight:800;
+    letter-spacing:.04em;background:rgba(123,94,167,.08);color:var(--text-light);
+    border:1.5px solid rgba(123,94,167,.15);
+  }
+
+  .nominate-card {
+    background:rgba(255,255,255,.8);
+    border:1.5px solid rgba(123,94,167,.15);
+    border-radius:20px;padding:18px 20px;
+    max-width:360px;width:100%;margin-top:20px;text-align:center;
+    box-shadow:0 4px 20px rgba(123,94,167,.1);
+    backdrop-filter:blur(8px);position:relative;z-index:2;
+    overflow:hidden;
+  }
+  .nominate-card::before {
+    content:'';position:absolute;top:0;left:0;right:0;height:3px;
+    background:linear-gradient(90deg,var(--r),var(--o),var(--y),var(--g),var(--b),var(--v),var(--pink));
+  }
+  .nominate-card h3{font-family:'Syne',sans-serif;font-size:16px;color:var(--o);margin-bottom:6px;}
+  .nominate-card p{font-size:13px;color:var(--text-light);font-weight:600;}
+
+  /* ── PROGRESS DOTS ── */
+  #progress-dots {
+    position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+    display:flex;gap:8px;z-index:50;
+  }
+  .dot-step {
+    width:8px;height:8px;border-radius:50%;
+    background:rgba(123,94,167,.25);transition:all .3s;
+  }
+  .dot-step.active{background:var(--v);width:24px;border-radius:4px;}
+</style>
+</head>
+<body>
+
+<!-- Rainbow star background -->
+<canvas id="star-canvas"></canvas>
+
+<!-- Counter Badge -->
+<div id="counter-badge">
+  <span class="dot"></span>
+  <span id="counter-text">2,413 pledges today</span>
+</div>
+
+<!-- Progress Dots -->
+<div id="progress-dots">
+  <div class="dot-step active" id="dot-1"></div>
+  <div class="dot-step" id="dot-2"></div>
+  <div class="dot-step" id="dot-3"></div>
+  <div class="dot-step" id="dot-4"></div>
+  <div class="dot-step" id="dot-5"></div>
+</div>
+
+<!-- ═══ SCREEN 1 ═══ -->
+<div class="screen active" id="screen-1">
+  <div class="rainbow-bar"></div>
+  <div class="s1-inner">
+    <div class="rainbow-emoji">🌈</div>
+    <h1 class="s1-headline">Make the Internet Kinder</h1>
+    <p class="s1-sub">Take the Safe Internet Pledge and help build a respectful and inclusive digital world.</p>
+    <div class="s1-card">
+      <p>Online spaces should be places of connection, empathy, and support. At Happiness Fair 2026, we invite you to create:</p>
+      <ul>
+        <li><span class="pill" style="background:linear-gradient(135deg,#FF4E6A,#FF8C42)">💬</span> Kinder conversations</li>
+        <li><span class="pill" style="background:linear-gradient(135deg,#06D6A0,#118AB2)">🛡️</span> Safer online communities</li>
+        <li><span class="pill" style="background:linear-gradient(135deg,#7B5EA7,#FF6B9D)">🏳️‍🌈</span> Inclusive spaces for everyone</li>
+      </ul>
+    </div>
+    <button class="btn-rainbow" onclick="goTo(2)">Take the Safe Internet Pledge</button>
+  </div>
+</div>
+
+<!-- ═══ SCREEN 2 ═══ -->
+<div class="screen" id="screen-2">
+  <div class="rainbow-bar"></div>
+  <div class="s2-inner">
+    <h2 class="s2-title">The Safe Internet Pledge</h2>
+    <p class="s2-subtitle">Happiness Fair 2026</p>
+    <div class="pledge-card">
+      <p class="pledge-intro">I pledge to:</p>
+      <div class="pledge-items">
+        <div class="pledge-item"><div class="check-icon">✓</div><p class="pledge-text">Speak respectfully online</p></div>
+        <div class="pledge-item"><div class="check-icon">✓</div><p class="pledge-text">Think before sharing harmful content</p></div>
+        <div class="pledge-item"><div class="check-icon">✓</div><p class="pledge-text">Avoid spreading hate or misinformation</p></div>
+        <div class="pledge-item"><div class="check-icon">✓</div><p class="pledge-text">Support mental wellbeing in digital spaces</p></div>
+        <div class="pledge-item"><div class="check-icon" style="background:linear-gradient(135deg,var(--pink),var(--v))">✓</div><p class="pledge-text">Promote inclusion &amp; respect for LGBTQ+ communities</p></div>
+        <div class="pledge-item"><div class="check-icon">✓</div><p class="pledge-text">Help create safer online environments for everyone</p></div>
+      </div>
+    </div>
+    <button class="btn-rainbow" onclick="takePledge()">I TAKE THE PLEDGE 🌈</button>
+  </div>
+</div>
+
+<!-- ═══ SCREEN 3 ═══ -->
+<div class="screen" id="screen-3">
+  <div class="camera-ring"><div class="camera-inner">📸</div></div>
+  <h2 class="s3-title">Capture Your Moment!</h2>
+  <p class="s3-sub">Take a selfie to create your personal Safe Internet Ambassador card.</p>
+  <input type="file" id="file-input" accept="image/*" capture="user">
+  <button class="btn-camera" onclick="document.getElementById('file-input').click()">
+    📷 &nbsp;Open Camera
+  </button>
+  <span class="skip-link" onclick="generateCardNoPhoto()">Skip — use default photo</span>
+</div>
+
+<!-- ═══ SCREEN 4 ═══ -->
+<div class="screen" id="screen-4">
+  <p class="s4-title">Your Pledge Card ✨</p>
+  <p class="s4-sub">Share it to inspire others!</p>
+  <div id="canvas-container">
+    <canvas id="pledge-canvas"></canvas>
+  </div>
+  <button class="btn-rainbow" onclick="goTo(5)" style="position:relative;z-index:2;">Share My Pledge 🌈</button>
+</div>
+
+<!-- ═══ SCREEN 5 ═══ -->
+<div class="screen" id="screen-5">
+  <div class="confetti-wrapper" id="confetti-wrapper"></div>
+  <div class="ambassador-badge">🌈</div>
+  <h2 class="s5-title">You're a Safe Internet Ambassador!</h2>
+  <p class="s5-msg">Thank you for helping build a safer and more inclusive internet. Share your pledge and inspire others.</p>
+  <div class="share-grid">
+    <button class="share-btn btn-insta" onclick="shareInsta()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      Instagram
+    </button>
+    <button class="share-btn btn-whatsapp" onclick="shareWhatsApp()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      WhatsApp
+    </button>
+    <button class="share-btn btn-twitter" onclick="shareTwitter()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.63L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
+      Twitter / X
+    </button>
+    <button class="share-btn btn-download" onclick="downloadImage()">⬇️ &nbsp;Download Image</button>
+  </div>
+  <div class="hashtags">
+    <span class="hashtag">#SafeInternetAmbassador</span>
+    <span class="hashtag">#KindInternet</span>
+    <span class="hashtag">#HappinessFair2026</span>
+    <span class="hashtag">@monoshij</span>
+  </div>
+  <div class="nominate-card">
+    <h3>📣 Nominate 2 Friends!</h3>
+    <p>Tag two friends who should also take the Safe Internet Pledge and spread kindness online.</p>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════
+// RAINBOW STAR BACKGROUND
+// ══════════════════════════════════
+const starCanvas = document.getElementById('star-canvas');
+const sCtx = starCanvas.getContext('2d');
+
+const RAINBOW_COLORS = [
+  '#FF4E6A','#FF6B6B','#FF8C42','#FFD166',
+  '#06D6A0','#00B4D8','#118AB2','#7B5EA7',
+  '#FF6B9D','#C77DFF','#48CAE4','#F4A261'
+];
+
+let stars = [];
+
+function resizeStarCanvas() {
+  starCanvas.width = window.innerWidth;
+  starCanvas.height = window.innerHeight;
+  initStars();
+}
+
+function initStars() {
+  stars = [];
+  const count = Math.floor((starCanvas.width * starCanvas.height) / 2200);
+  for (let i = 0; i < count; i++) {
+    stars.push(createStar());
+  }
+}
+
+function createStar(forceX, forceY) {
+  return {
+    x: forceX !== undefined ? forceX : Math.random() * starCanvas.width,
+    y: forceY !== undefined ? forceY : Math.random() * starCanvas.height,
+    size: Math.random() * 3.5 + 0.8,
+    color: RAINBOW_COLORS[Math.floor(Math.random() * RAINBOW_COLORS.length)],
+    alpha: Math.random() * 0.6 + 0.2,
+    alphaSpeed: (Math.random() * 0.008 + 0.003) * (Math.random() > 0.5 ? 1 : -1),
+    twinkleOffset: Math.random() * Math.PI * 2,
+    shape: Math.random() > 0.5 ? 'star' : 'dot', // mix of stars and dots
+    rotation: Math.random() * Math.PI * 2,
+    rotSpeed: (Math.random() - 0.5) * 0.02,
+    drift: (Math.random() - 0.5) * 0.12,
+  };
+}
+
+function drawStar4(ctx, x, y, r, color, alpha) {
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  for (let i = 0; i < 4; i++) {
+    const angle = (i / 4) * Math.PI * 2;
+    const outerX = x + Math.cos(angle) * r;
+    const outerY = y + Math.sin(angle) * r;
+    const innerAngle = angle + Math.PI / 4;
+    const innerX = x + Math.cos(innerAngle) * r * 0.38;
+    const innerY = y + Math.sin(innerAngle) * r * 0.38;
+    if (i === 0) ctx.moveTo(outerX, outerY);
+    else ctx.lineTo(outerX, outerY);
+    ctx.lineTo(innerX, innerY);
+  }
+  ctx.closePath();
+  ctx.fill();
+  // soft glow
+  const grd = ctx.createRadialGradient(x, y, 0, x, y, r * 2.5);
+  grd.addColorStop(0, color.replace(')', ',0.18)').replace('rgb', 'rgba').replace('#', 'rgba(').replace(/^rgba\(([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2}),/, (_,r,g,b) => `rgba(${parseInt(r,16)},${parseInt(g,16)},${parseInt(b,16)},`));
+  grd.addColorStop(1, 'transparent');
+  ctx.fillStyle = grd;
+  ctx.beginPath(); ctx.arc(x, y, r * 2.5, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
+}
+
+function hexToRgba(hex, a) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+
+function animateStars(t) {
+  sCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
+  // White background
+  sCtx.fillStyle = '#ffffff';
+  sCtx.fillRect(0, 0, starCanvas.width, starCanvas.height);
+
+  stars.forEach(s => {
+    // Twinkle
+    s.alpha += s.alphaSpeed;
+    if (s.alpha > 0.85 || s.alpha < 0.1) s.alphaSpeed *= -1;
+    s.rotation += s.rotSpeed;
+    s.x += s.drift;
+    if (s.x < -10) s.x = starCanvas.width + 10;
+    if (s.x > starCanvas.width + 10) s.x = -10;
+
+    const twinkle = 0.5 + 0.5 * Math.sin(t * 0.001 + s.twinkleOffset);
+    const finalAlpha = s.alpha * (0.6 + 0.4 * twinkle);
+
+    if (s.shape === 'star') {
+      sCtx.save();
+      sCtx.translate(s.x, s.y);
+      sCtx.rotate(s.rotation);
+      sCtx.globalAlpha = finalAlpha;
+      sCtx.fillStyle = s.color;
+      // 4-point star
+      const r = s.size;
+      sCtx.beginPath();
+      for (let i = 0; i < 4; i++) {
+        const angle = (i / 4) * Math.PI * 2 - Math.PI / 4;
+        const oX = Math.cos(angle) * r;
+        const oY = Math.sin(angle) * r;
+        const iAngle = angle + Math.PI / 4;
+        const iX = Math.cos(iAngle) * r * 0.35;
+        const iY = Math.sin(iAngle) * r * 0.35;
+        if (i === 0) sCtx.moveTo(oX, oY);
+        else sCtx.lineTo(oX, oY);
+        sCtx.lineTo(iX, iY);
+      }
+      sCtx.closePath();
+      sCtx.fill();
+      // glow
+      sCtx.globalAlpha = finalAlpha * 0.25;
+      sCtx.fillStyle = s.color;
+      sCtx.beginPath(); sCtx.arc(0, 0, r * 2.2, 0, Math.PI*2); sCtx.fill();
+      sCtx.restore();
+    } else {
+      // dot with glow
+      sCtx.save();
+      sCtx.globalAlpha = finalAlpha;
+      sCtx.fillStyle = s.color;
+      sCtx.beginPath(); sCtx.arc(s.x, s.y, s.size * 0.7, 0, Math.PI*2); sCtx.fill();
+      sCtx.globalAlpha = finalAlpha * 0.2;
+      sCtx.beginPath(); sCtx.arc(s.x, s.y, s.size * 2, 0, Math.PI*2); sCtx.fill();
+      sCtx.restore();
+    }
+  });
+
+  requestAnimationFrame(animateStars);
+}
+
+window.addEventListener('resize', resizeStarCanvas);
+resizeStarCanvas();
+requestAnimationFrame(animateStars);
+
+// ══════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════
+let currentScreen = 1;
+let pledgeCount = 2413 + Math.floor(Math.random() * 20);
+updateCounter();
+
+function updateCounter() {
+  document.getElementById('counter-text').textContent = pledgeCount.toLocaleString() + ' pledges today';
+}
+
+function goTo(n) {
+  const prev = document.getElementById('screen-' + currentScreen);
+  const next = document.getElementById('screen-' + n);
+  prev.classList.remove('active');
+  prev.classList.add('exit');
+  setTimeout(() => prev.classList.remove('exit'), 450);
+  currentScreen = n;
+  next.classList.add('active');
+  updateDots(n);
+  if (n === 5) spawnConfetti();
+}
+
+function updateDots(n) {
+  for (let i = 1; i <= 5; i++) {
+    document.getElementById('dot-' + i).classList.toggle('active', i === n);
+  }
+}
+
+function takePledge() { pledgeCount++; updateCounter(); goTo(3); }
+
+// ══════════════════════════════════
+// CAMERA / CANVAS
+// ══════════════════════════════════
+document.getElementById('file-input').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => generateCard(ev.target.result);
+  reader.readAsDataURL(file);
+});
+function generateCardNoPhoto() { generateCard(null); }
+
+let pledgeImageDataUrl = null;
+
+function generateCard(photoDataUrl) {
+  goTo(4);
+  const canvas = document.getElementById('pledge-canvas');
+  const W = 1080, H = 1920;
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  // White background
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, W, H);
+
+  // Rainbow star confetti on canvas
+  const cStarColors = RAINBOW_COLORS;
+  for (let i = 0; i < 280; i++) {
+    const x = Math.random() * W, y = Math.random() * H;
+    const color = cStarColors[Math.floor(Math.random() * cStarColors.length)];
+    const size = Math.random() * 14 + 4;
+    const alpha = Math.random() * 0.4 + 0.08;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = color;
+    ctx.translate(x, y);
+    ctx.rotate(Math.random() * Math.PI * 2);
+    if (Math.random() > 0.45) {
+      // 4-point star
+      ctx.beginPath();
+      for (let j = 0; j < 4; j++) {
+        const a = (j/4)*Math.PI*2;
+        const oX = Math.cos(a)*size, oY = Math.sin(a)*size;
+        const iA = a+Math.PI/4, iX = Math.cos(iA)*size*.35, iY = Math.sin(iA)*size*.35;
+        if (j===0) ctx.moveTo(oX,oY); else ctx.lineTo(oX,oY);
+        ctx.lineTo(iX,iY);
+      }
+      ctx.closePath(); ctx.fill();
+    } else {
+      ctx.beginPath(); ctx.arc(0, 0, size*0.55, 0, Math.PI*2); ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  // TOP BANNER
+  const topH = 300;
+  const topG = ctx.createLinearGradient(0, 0, W, topH);
+  topG.addColorStop(0,'#FF4E6A'); topG.addColorStop(.25,'#FF8C42');
+  topG.addColorStop(.5,'#FFD166'); topG.addColorStop(.75,'#06D6A0');
+  topG.addColorStop(1,'#118AB2');
+  ctx.fillStyle = topG;
+  roundRect(ctx, 30, 30, W-60, topH, 40); ctx.fill();
+
+  ctx.textAlign = 'center'; ctx.fillStyle = '#fff';
+  ctx.font = 'bold 78px sans-serif'; ctx.fillText('I TOOK THE', W/2, 118);
+  ctx.font = 'bold 62px sans-serif'; ctx.fillText('SAFE INTERNET PLEDGE 🌈', W/2, 198);
+  ctx.font = '42px sans-serif'; ctx.fillStyle='rgba(255,255,255,.8)';
+  ctx.fillText('Happiness Fair 2026', W/2, 262);
+
+  // SELFIE AREA
+  const photoY = topH + 80, photoH = 760, photoX = 60, photoW = W-120;
+  if (photoDataUrl) {
+    const img = new Image();
+    img.onload = () => {
+      ctx.save();
+      roundRect(ctx, photoX, photoY, photoW, photoH, 48); ctx.clip();
+      const scale = Math.max(photoW/img.width, photoH/img.height);
+      const dx = photoX+(photoW-img.width*scale)/2;
+      const dy = photoY+(photoH-img.height*scale)/2;
+      ctx.drawImage(img, dx, dy, img.width*scale, img.height*scale);
+      ctx.restore();
+      ctx.strokeStyle='rgba(123,94,167,0.4)'; ctx.lineWidth=6;
+      roundRect(ctx,photoX,photoY,photoW,photoH,48); ctx.stroke();
+      finishCard(ctx,W,H,photoY,photoH);
+    };
+    img.src = photoDataUrl;
+  } else {
+    ctx.save();
+    roundRect(ctx,photoX,photoY,photoW,photoH,48); ctx.clip();
+    const g2 = ctx.createLinearGradient(photoX,photoY,photoX+photoW,photoY+photoH);
+    g2.addColorStop(0,'#f3f0ff'); g2.addColorStop(1,'#e8f4ff');
+    ctx.fillStyle=g2; ctx.fillRect(photoX,photoY,photoW,photoH);
+    ctx.restore();
+    ctx.strokeStyle='rgba(123,94,167,0.2)'; ctx.lineWidth=5;
+    roundRect(ctx,photoX,photoY,photoW,photoH,48); ctx.stroke();
+    ctx.fillStyle='rgba(123,94,167,0.15)';
+    ctx.beginPath(); ctx.arc(W/2,photoY+280,130,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(W/2,photoY+560,210,Math.PI,0); ctx.fill();
+    ctx.font='90px sans-serif'; ctx.textAlign='center';
+    ctx.fillStyle='rgba(123,94,167,0.6)'; ctx.fillText('😊',W/2,photoY+330);
+    finishCard(ctx,W,H,photoY,photoH);
+  }
+
+  function finishCard(ctx,W,H,photoY,photoH) {
+    const botY = photoY+photoH+50, botH = H-botY-30;
+    const botG = ctx.createLinearGradient(0,botY,W,H);
+    botG.addColorStop(0,'#7B5EA7'); botG.addColorStop(.5,'#FF6B9D'); botG.addColorStop(1,'#FF4E6A');
+    ctx.fillStyle=botG;
+    roundRect(ctx,30,botY,W-60,botH,40); ctx.fill();
+
+    ctx.textAlign='center'; ctx.fillStyle='#fff';
+    ctx.font='bold 58px sans-serif'; ctx.fillText('SAFE INTERNET AMBASSADOR',W/2,botY+80);
+    ctx.font='38px sans-serif'; ctx.fillStyle='rgba(255,255,255,.85)';
+    ctx.fillText('Happiness Fair 2026',W/2,botY+140);
+    ctx.strokeStyle='rgba(255,255,255,.3)'; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.moveTo(120,botY+168); ctx.lineTo(W-120,botY+168); ctx.stroke();
+    ctx.fillStyle='rgba(255,255,255,.75)'; ctx.font='34px sans-serif';
+    ctx.fillText('Tag @monoshij',W/2,botY+216);
+    ctx.font='30px sans-serif';
+    ctx.fillText('#SafeInternetAmbassador  #KindInternet',W/2,botY+260);
+    ctx.fillText('#HappinessFair2026',W/2,botY+302);
+
+    // Rainbow bottom strip
+    const rbG = ctx.createLinearGradient(0,H-16,W,H);
+    rbG.addColorStop(0,'#FF4E6A'); rbG.addColorStop(.17,'#FF8C42');
+    rbG.addColorStop(.34,'#FFD166'); rbG.addColorStop(.5,'#06D6A0');
+    rbG.addColorStop(.67,'#118AB2'); rbG.addColorStop(.83,'#7B5EA7');
+    rbG.addColorStop(1,'#FF6B9D');
+    ctx.fillStyle=rbG; ctx.fillRect(0,H-16,W,16);
+
+    pledgeImageDataUrl = canvas.toDataURL('image/jpeg',0.92);
+  }
+}
+
+function roundRect(ctx,x,y,w,h,radii) {
+  const r = Array.isArray(radii)
+    ? {tl:radii[0],tr:radii[1],br:radii[2],bl:radii[3]}
+    : {tl:radii,tr:radii,br:radii,bl:radii};
+  ctx.beginPath();
+  ctx.moveTo(x+r.tl,y);
+  ctx.lineTo(x+w-r.tr,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r.tr);
+  ctx.lineTo(x+w,y+h-r.br); ctx.quadraticCurveTo(x+w,y+h,x+w-r.br,y+h);
+  ctx.lineTo(x+r.bl,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r.bl);
+  ctx.lineTo(x,y+r.tl); ctx.quadraticCurveTo(x,y,x+r.tl,y);
+  ctx.closePath();
+}
+
+// ══════════════════════════════════
+// SHARE
+// ══════════════════════════════════
+async function getBlob() {
+  return new Promise(resolve => {
+    document.getElementById('pledge-canvas').toBlob(b => resolve(b),'image/jpeg',0.92);
+  });
+}
+async function nativeShare() {
+  if (!pledgeImageDataUrl) { alert('Card is still generating, please wait!'); return; }
+  if (navigator.share) {
+    try {
+      const blob = await getBlob();
+      const file = new File([blob],'safe-internet-pledge.jpg',{type:'image/jpeg'});
+      await navigator.share({
+        title:'I took the Safe Internet Pledge 🌈',
+        text:'Join me in creating a kinder internet. #SafeInternetAmbassador #KindInternet #HappinessFair2026',
+        files:[file]
+      });
+    } catch(e) { downloadImage(); }
+  } else { downloadImage(); }
+}
+function shareInsta() { nativeShare(); }
+function shareWhatsApp() {
+  if (navigator.share) { nativeShare(); }
+  else {
+    const text = encodeURIComponent('I just took the Safe Internet Pledge 🌈 #SafeInternetAmbassador #KindInternet #HappinessFair2026');
+    window.open('https://wa.me/?text='+text,'_blank');
+  }
+}
+function shareTwitter() {
+  const text = encodeURIComponent('I just took the Safe Internet Pledge 🌈\n#SafeInternetAmbassador #KindInternet #HappinessFair2026 @monoshij');
+  window.open('https://twitter.com/intent/tweet?text='+text,'_blank');
+}
+function downloadImage() {
+  if (!pledgeImageDataUrl) { alert('Card is still generating, please wait!'); return; }
+  const a = document.createElement('a');
+  a.href = pledgeImageDataUrl;
+  a.download = 'safe-internet-pledge.jpg';
+  a.click();
+}
+
+// ══════════════════════════════════
+// CONFETTI
+// ══════════════════════════════════
+function spawnConfetti() {
+  const wrapper = document.getElementById('confetti-wrapper');
+  wrapper.innerHTML = '';
+  const colors = ['#FF4E6A','#FF8C42','#FFD166','#06D6A0','#118AB2','#7B5EA7','#FF6B9D'];
+  for (let i = 0; i < 70; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    el.style.cssText = `left:${Math.random()*100}%;background:${colors[Math.floor(Math.random()*colors.length)]};width:${Math.random()*9+4}px;height:${Math.random()*9+4}px;border-radius:${Math.random()>.5?'50%':'3px'};animation-delay:${Math.random()*1.2}s;animation-duration:${Math.random()*1.5+1.8}s;`;
+    wrapper.appendChild(el);
+  }
+}
+
+// Live counter tick
+setInterval(() => { if (Math.random()<0.3) { pledgeCount++; updateCounter(); } }, 8000);
+</script>
+</body>
+</html>
